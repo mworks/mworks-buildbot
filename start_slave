@@ -14,7 +14,7 @@ function get_config
 
 SLAVEDIR=~/.buildbot_slave
 
-MASTER_HOST=$(get_config buildbot_hostname)
+MASTER_HOST=$(get_config master_hostname)
 if [[ $MASTER_HOST == $(hostname) ]]; then
     MASTER_HOST=localhost
 fi
@@ -29,7 +29,7 @@ buildslave create-slave --umask=022 $SLAVEDIR \
     $MASTER_HOST:$MASTER_PORT \
     $SLAVE_NAME $SLAVE_PASS
 
-get_config buildbot_admin > $SLAVEDIR/info/admin
+get_config master_admin > $SLAVEDIR/info/admin
 system_profiler -detailLevel mini SPHardwareDataType SPSoftwareDataType \
     > $SLAVEDIR/info/host
 
