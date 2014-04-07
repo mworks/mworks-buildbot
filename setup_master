@@ -1,0 +1,52 @@
+#!/usr/bin/python
+
+import os
+import plistlib
+import shutil
+from subprocess import check_call
+
+
+masterdir = 'master'
+
+plistdir = os.path.expanduser('~/Library/LaunchAgents')
+plistlabel = 'org.mworks-project.buildbot.master'
+plistfile = os.path.join(plistdir, plistlabel + '.plist')
+
+plist = {
+    'Label': plistlabel,
+    'ProgramArguments': [
+        '/usr/bin/twistd',
+        '--nodaemon',
+        '--python=./buildbot.tac',
+        ],
+    'KeepAlive': {
+        'SuccessfulExit': False,
+        },
+    'RunAtLoad': True,
+    'WorkingDirectory': os.path.join(os.getcwd(), masterdir),
+    'StandardOutPath': 'twistd.log',
+    'StandardErrorPath': 'twistd-err.log',
+    }
+
+launchctl = '/bin/launchctl'
+
+
+if os.path.isfile(plistfile):
+    check_call([launchctl, 'unload', plistfile])
+
+check_call([
+    '/usr/local/bin/buildbot',
+    'create-master',
+    '--relocatable',
+    masterdir,
+    ])
+
+for filename in ('master.cfg', 'master_config.py', 'passwords.py'):
+    shutil.copy(filename, masterdir)
+
+if not os.path.isdir(plistdir):
+    os.makedirs(plistdir)
+
+plistlib.writePlist(plist, plistfile)
+
+check_call([launchctl, 'load', plistfile])
