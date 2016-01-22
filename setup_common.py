@@ -16,7 +16,8 @@ def launchd_plist(kind):
     plist = {
         'Label': plistlabel,
         'ProgramArguments': [
-            '/usr/bin/twistd',
+            '/usr/bin/python',
+            '-c', 'from twisted.scripts.twistd import run; run()',
             '--nodaemon',
             '--python=./buildbot.tac',
             ],
