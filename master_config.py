@@ -1,2 +1,2 @@
 hostname = 'dicarlo-mwdev.mit.edu'
-slave_port = 9989
+worker_port = 9989

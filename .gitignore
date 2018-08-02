@@ -1,4 +1,4 @@
 *.pyc
 master/
-slave/
+worker/
 passwords.py

@@ -2,10 +2,22 @@ from contextlib import contextmanager
 import os
 import plistlib
 from subprocess import check_call
+import sys
 
 
+buildbot_run_code = {
+    'master': 'from buildbot.scripts.runner import run; run()',
+    'worker': 'from buildbot_worker.scripts.runner import run; run()'
+    }
 launchctl = '/bin/launchctl'
 plistdir = os.path.expanduser('~/Library/LaunchAgents')
+
+
+def run_command(kind, *args):
+    check_call([
+        sys.executable,
+        '-c', buildbot_run_code[kind],
+        ] + list(args))
 
 
 @contextmanager
@@ -16,10 +28,10 @@ def launchd_plist(kind):
     plist = {
         'Label': plistlabel,
         'ProgramArguments': [
-            '/usr/bin/python',
-            '-c', 'from twisted.scripts.twistd import run; run()',
+            sys.executable,
+            '-c', buildbot_run_code[kind],
+            'start',
             '--nodaemon',
-            '--python=./buildbot.tac',
             ],
         'KeepAlive': {
             'SuccessfulExit': False,
@@ -27,7 +39,7 @@ def launchd_plist(kind):
         'RunAtLoad': True,
         'WorkingDirectory': os.path.join(os.getcwd(), kind),
         'StandardOutPath': 'twistd.log',
-        'StandardErrorPath': 'twistd-err.log',
+        'StandardErrorPath': 'twistd.log',
         }
     
     if os.path.isfile(plistfile):
