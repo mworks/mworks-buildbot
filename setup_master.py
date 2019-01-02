@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import shutil
 
 from setup_common import launchd_plist, run_command
