@@ -22,7 +22,7 @@ with launchd_plist('worker'):
         'worker',
         'create-worker',
         '--relocatable',
-        '--umask=022',
+        '--umask=0o22',
         workerdir,
         '%s:%d' % (master_hostname, master_config.worker_port),
         workername,
@@ -33,7 +33,7 @@ with launchd_plist('worker'):
         # Write current user's full name
         fp.write(pwd.getpwuid(os.getuid())[4] + '\n')
 
-    with open(os.path.join(workerdir, 'info/host'), 'w') as fp:
+    with open(os.path.join(workerdir, 'info/host'), 'wb') as fp:
         fp.write(subprocess.check_output([
             '/usr/sbin/system_profiler',
             '-detailLevel', 'mini',

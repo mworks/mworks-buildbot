@@ -38,6 +38,9 @@ def launchd_plist(kind):
             },
         'RunAtLoad': True,
         'WorkingDirectory': os.path.join(os.getcwd(), kind),
+        'EnvironmentVariables': {
+            'LANG': 'en_US.UTF-8',
+            },
         'StandardOutPath': 'twistd.log',
         'StandardErrorPath': 'twistd.log',
         }
