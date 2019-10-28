@@ -53,6 +53,7 @@ def launchd_plist(kind):
     if not os.path.isdir(plistdir):
         os.makedirs(plistdir)
     
-    plistlib.writePlist(plist, plistfile)
+    with open(plistfile, 'wb') as fp:
+        plistlib.dump(plist, fp)
     
     check_call([launchctl, 'load', plistfile])
