@@ -72,7 +72,7 @@ class Api(object):
 
                 info['url'] = '%s#/builders/%d/builds/%d' % (config['base_url'],
                                                              info['builderid'],
-                                                             info['buildid'])
+                                                             info['number'])
 
                 latest_builds.append(info)
 
