@@ -85,7 +85,7 @@ class Api(object):
         config['updated'] = updated
 
         template = self.env.get_template('atom.xml.j2')
-        defer.returnValue(template.render(config=config, builds=latest_builds))
+        return template.render(config=config, builds=latest_builds)
 
 
 ep = Application(__name__, 'Buildbot atom feed', ui=False)
